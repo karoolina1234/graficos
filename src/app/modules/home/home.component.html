@@ -47,7 +47,7 @@
       </form>
 
       <!--Criar conta-->
-      <form>
+      <form [formGroup]="signUpForm" (ngSubmit)="onSubmitSignUpForm()">
         <p-card
           styleClass="mt-10"
           header="Criar conta"
@@ -57,17 +57,32 @@
           <div
             class="flex justify-content-center align-content-center text-align-center"
           >
-            <input type="text" pInputText placeholder="Nome" />
+            <input
+              type="text"
+              pInputText
+              placeholder="Nome"
+              formControlName="name"
+            />
           </div>
           <div
             class="flex justify-content-center align-content-center text-align-center mt-3"
           >
-            <input type="email" pInputText placeholder="E-mail" />
+            <input
+              type="email"
+              pInputText
+              placeholder="E-mail"
+              formControlName="email"
+            />
           </div>
           <div
             class="flex justify-content-center align-content-center text-align-center mt-3"
           >
-            <input type="password" pInputText placeholder="Senha" />
+            <input
+              type="password"
+              pInputText
+              placeholder="Senha"
+              formControlName="password"
+            />
           </div>
 
           <div class="card flex justify-content-center mt-3">

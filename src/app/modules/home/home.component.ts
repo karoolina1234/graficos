@@ -14,8 +14,18 @@ export class HomeComponent {
     password: ['', Validators.required],
   });
 
+  signUpForm = this.formBuilder.group({
+    name: ['', Validators.required],
+    email: ['', Validators.required],
+    password: ['', Validators.required],
+  });
+
   constructor(private formBuilder: FormBuilder) {}
   onSubmitLoginForm(): void {
     console.log('login', this.loginForm.value);
+  }
+
+  onSubmitSignUpForm(): void {
+    console.log('login', this.signUpForm.value);
   }
 }
