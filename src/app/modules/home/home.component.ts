@@ -1,5 +1,10 @@
+import { UserService } from './../../services/user/user.service';
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import {
+  SiginUpUserReq,
+  SiginUpUserResponse,
+} from 'src/app/models/interfaces/user/SiginUpUserReq';
 
 @Component({
   selector: 'app-home',
@@ -20,12 +25,27 @@ export class HomeComponent {
     password: ['', Validators.required],
   });
 
-  constructor(private formBuilder: FormBuilder) {}
+  constructor(
+    private formBuilder: FormBuilder,
+    private userService: UserService
+  ) {}
   onSubmitLoginForm(): void {
     console.log('login', this.loginForm.value);
   }
 
   onSubmitSignUpForm(): void {
-    console.log('login', this.signUpForm.value);
+    if (this.signUpForm.value && this.signUpForm.valid) {
+      this.userService
+        .signupUser(this.signUpForm.value as SiginUpUserReq)
+        .subscribe({
+          next: (response) => {
+            if (response) {
+              this.signUpForm.reset();
+              this.LoginCard = true;
+            }
+          },
+          error: (error) => console.log(error),
+        });
+    }
   }
 }
