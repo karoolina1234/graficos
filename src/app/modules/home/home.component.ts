@@ -1,6 +1,8 @@
 import { UserService } from './../../services/user/user.service';
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { CookieService } from 'ngx-cookie-service';
+import { AuthRequest } from 'src/app/models/interfaces/user/auth/AuthUser';
 import {
   SiginUpUserReq,
   SiginUpUserResponse,
@@ -27,10 +29,21 @@ export class HomeComponent {
 
   constructor(
     private formBuilder: FormBuilder,
-    private userService: UserService
+    private userService: UserService,
+    private cookieService: CookieService
   ) {}
   onSubmitLoginForm(): void {
-    console.log('login', this.loginForm.value);
+    if (this.loginForm.value && this.loginForm.valid) {
+      this.userService.athUser(this.loginForm.value as AuthRequest).subscribe({
+        next: (response) => {
+          if (response) {
+            this.cookieService.set('USER_INFO', response?.token);
+            this.loginForm.reset();
+          }
+        },
+        error: (error) => console.log(error),
+      });
+    }
   }
 
   onSubmitSignUpForm(): void {
