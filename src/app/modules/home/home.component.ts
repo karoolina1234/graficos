@@ -2,6 +2,7 @@ import { UserService } from './../../services/user/user.service';
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
+import { MessageService } from 'primeng/api';
 import { AuthRequest } from 'src/app/models/interfaces/user/auth/AuthUser';
 import {
   SiginUpUserReq,
@@ -30,7 +31,8 @@ export class HomeComponent {
   constructor(
     private formBuilder: FormBuilder,
     private userService: UserService,
-    private cookieService: CookieService
+    private cookieService: CookieService,
+    private messageService: MessageService
   ) {}
   onSubmitLoginForm(): void {
     if (this.loginForm.value && this.loginForm.valid) {
@@ -39,9 +41,21 @@ export class HomeComponent {
           if (response) {
             this.cookieService.set('USER_INFO', response?.token);
             this.loginForm.reset();
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Sucesso!',
+              detail: `Bem vindo(a) ${response.name}`,
+              life: 2000,
+            });
           }
         },
-        error: (error) => console.log(error),
+        error: (error) =>
+          this.messageService.add({
+            severity: 'error',
+            summary: 'ERRO!',
+            detail: `${error}`,
+            life: 2000,
+          }),
       });
     }
   }
@@ -55,9 +69,21 @@ export class HomeComponent {
             if (response) {
               this.signUpForm.reset();
               this.LoginCard = true;
+              this.messageService.add({
+                severity: 'success',
+                summary: 'Sucesso!',
+                detail: `Usuário cadastrado com sucesso!`,
+                life: 2000,
+              });
             }
           },
-          error: (error) => console.log(error),
+          error: (error) =>
+            this.messageService.add({
+              severity: 'error',
+              summary: 'ERRO!',
+              detail: `${error}`,
+              life: 2000,
+            }),
         });
     }
   }
