@@ -6,11 +6,20 @@ import { DashboardHomeComponent } from './modules/dashboard/page/dashboard-home/
 const routes: Routes = [
   {
     path: '',
+    redirectTo: 'dashboard',
+    pathMatch: 'full',
+  },
+  {
+    path: 'home',
     component: HomeComponent,
   },
   {
     path: 'dashboard',
     component: DashboardHomeComponent,
+    loadChildren: () =>
+      import('./modules/dashboard/dashboard.module').then(
+        (n) => n.DashboardModule
+      ),
   },
 ];
 
