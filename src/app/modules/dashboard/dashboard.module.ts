@@ -13,6 +13,7 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { CookieService } from 'ngx-cookie-service';
 
+import { ChartModule } from 'primeng/chart';
 @NgModule({
   declarations: [DashboardHomeComponent],
   imports: [
@@ -25,6 +26,7 @@ import { CookieService } from 'ngx-cookie-service';
     ToolbarModule,
     CardModule,
     ToastModule,
+    ChartModule,
   ],
   providers: [MessageService, CookieService],
 })
