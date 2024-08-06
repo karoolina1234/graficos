@@ -1,9 +1,10 @@
 import { UserService } from './../../services/user/user.service';
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { MessageService } from 'primeng/api';
+import { Subject, takeUntil } from 'rxjs';
 import { AuthRequest } from 'src/app/models/interfaces/user/auth/AuthUser';
 import {
   SiginUpUserReq,
@@ -15,7 +16,8 @@ import {
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
-export class HomeComponent {
+export class HomeComponent implements OnDestroy {
+  private destroy$ = new Subject<void>();
   LoginCard = true;
 
   loginForm = this.formBuilder.group({
@@ -38,28 +40,31 @@ export class HomeComponent {
   ) {}
   onSubmitLoginForm(): void {
     if (this.loginForm.value && this.loginForm.valid) {
-      this.userService.athUser(this.loginForm.value as AuthRequest).subscribe({
-        next: (response) => {
-          if (response) {
-            this.cookieService.set('USER_INFO', response?.token);
-            this.loginForm.reset();
-            this.router.navigate(['/dashboard']);
+      this.userService
+        .athUser(this.loginForm.value as AuthRequest)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (response) => {
+            if (response) {
+              this.cookieService.set('USER_INFO', response?.token);
+              this.loginForm.reset();
+              this.router.navigate(['/dashboard']);
+              this.messageService.add({
+                severity: 'success',
+                summary: 'Sucesso!',
+                detail: `Bem vindo(a) ${response.name}`,
+                life: 2000,
+              });
+            }
+          },
+          error: (error) =>
             this.messageService.add({
-              severity: 'success',
-              summary: 'Sucesso!',
-              detail: `Bem vindo(a) ${response.name}`,
+              severity: 'error',
+              summary: 'ERRO!',
+              detail: `${error}`,
               life: 2000,
-            });
-          }
-        },
-        error: (error) =>
-          this.messageService.add({
-            severity: 'error',
-            summary: 'ERRO!',
-            detail: `${error}`,
-            life: 2000,
-          }),
-      });
+            }),
+        });
     }
   }
 
@@ -67,6 +72,7 @@ export class HomeComponent {
     if (this.signUpForm.value && this.signUpForm.valid) {
       this.userService
         .signupUser(this.signUpForm.value as SiginUpUserReq)
+        .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (response) => {
             if (response) {
@@ -89,5 +95,15 @@ export class HomeComponent {
             }),
         });
     }
+  }
+/*
+Melhoria de performance
+Realiza a limpeza de recursos antes de destruir a função
+evitando vazamnto de memoria
+Cancelando a subscrição
+ */
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
