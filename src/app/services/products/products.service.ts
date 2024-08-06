@@ -14,7 +14,7 @@ export class ProductsService {
   private httOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',
-      Autorization: `Bearer ${this.JWT_TOKEN}`,
+      Authorization: `Bearer ${this.JWT_TOKEN}`,
     }),
   };
   constructor(private http: HttpClient, private cookie: CookieService) {}
