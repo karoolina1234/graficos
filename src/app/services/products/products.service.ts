@@ -25,6 +25,6 @@ export class ProductsService {
         `${this.API_URL}/products`,
         this.httOptions
       )
-      .pipe(map((product) => product.filter((data) => data.amout > 0)));
+      .pipe(map((product) => product.filter((data) => data.amount > 0)));
   }
 }

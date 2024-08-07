@@ -70,7 +70,7 @@ export class DashboardHomeComponent implements OnInit, OnDestroy {
             borderColor: documentStyle.getPropertyValue('--indigo-400'),
             hoverBackgroundColor:
               documentStyle.getPropertyValue('--indigo-500'),
-            data: this.productList.map((element) => element.amout),
+            data: this.productList.map((element) => element?.amount),
           },
         ],
       };

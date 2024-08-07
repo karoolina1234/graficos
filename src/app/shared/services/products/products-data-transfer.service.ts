@@ -22,7 +22,7 @@ export class ProductsDataTransferService {
     this.productsDataEmmiter$
       .pipe(
         take(1),
-        map((data) => data?.filter((product) => product.amout > 0))
+        map((data) => data?.filter((product) => product.amount > 0))
       )
       .subscribe({
         next: (response) => {
