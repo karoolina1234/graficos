@@ -1,7 +1,7 @@
 import { GetAllProductsResponse } from './../../../../models/interfaces/products/getAllProducts';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { Subject, takeUntil } from 'rxjs';
 import { EventAction } from 'src/app/models/interfaces/products/event/EventAction';
 import { ProductsService } from 'src/app/services/products/products.service';
@@ -19,7 +19,8 @@ export class ProductsComponent implements OnInit, OnDestroy {
     private productService: ProductsService,
     private productDataTransfer: ProductsDataTransferService,
     private router: Router,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private confirmationService: ConfirmationService
   ) {}
 
   ngOnInit(): void {
@@ -68,7 +69,20 @@ export class ProductsComponent implements OnInit, OnDestroy {
     productName: string;
   }): void {
     if (event) {
-      console.log('dados deletar:', event);
+      this.confirmationService.confirm({
+        message: `Deseja remover o produto ${event?.productName}`,
+        header: 'Confirmar',
+        icon: 'pi pi-exclamation-triangle',
+        acceptLabel: 'Sim',
+        rejectLabel: 'Não',
+        accept: () => this.deleteProduct(event?.product_id),
+      });
+    }
+  }
+
+  deleteProduct(product_id: string) {
+    if (product_id) {
+      alert(product_id);
     }
   }
 
