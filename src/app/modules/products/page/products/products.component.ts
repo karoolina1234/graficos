@@ -82,7 +82,31 @@ export class ProductsComponent implements OnInit, OnDestroy {
 
   deleteProduct(product_id: string) {
     if (product_id) {
-      alert(product_id);
+      this.productService
+        .deleteProduct(product_id)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (response) => {
+            if (response) {
+              this.messageService.add({
+                severity: 'success',
+                summary: 'Sucesso',
+                detail: 'produto removido com sucesso',
+                life: 2200,
+              });
+              this.getAPIProductsData();
+            }
+          },
+          error: (error) => {
+            console.log(error);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Erro!',
+              detail: 'Erro ao remover o produto',
+              life: 2300,
+            });
+          },
+        });
     }
   }
 
